@@ -1,0 +1,205 @@
+<!--
+  ============================================================
+  JONG EL FUERTE — ACADEMY INSTAPKALENDER (insluitbare widget)
+  ============================================================
+  Plak deze volledige code in een "Custom HTML"-blok op een
+  WordPress-pagina (of gebruik het als losse pagina).
+
+  Kleuren & stijl afgestemd op de huisstijl van de-jeftjes.be
+  (blauw + limoen, vette uppercase koppen).
+
+  ⚙️  AANPASSEN? Enkel het blokje hieronder tussen
+      "INSTELLINGEN" wijzigen. De rest hoef je niet aan te raken.
+  ============================================================
+-->
+
+<div id="dja-kalender"></div>
+
+<script>
+(function () {
+  /* ==========================================================
+     INSTELLINGEN  —  pas hier alles aan
+     ========================================================== */
+  var CONFIG = {
+    // Publieke naam (verschijnt bovenaan de kalender)
+    academy:        "Jong El Fuerte Academy",
+    // Naam zoals die in de inschrijf-mail wordt gebruikt
+    opleiding:      "de Academy",
+
+    // Opvallende boodschap onder de titel (leeg laten = niet tonen)
+    slogan:         "Geen muzikale voorkennis nodig — iedereen kan starten!",
+
+    // E-mailadres waar inschrijvingen naartoe gaan
+    email:          "info@de-jeftjes.be",
+
+    // 👉 Instapmomenten uit de planning (start van elke lessenreeks).
+    //    Formaat per regel: gewoon een datum-string "JJJJ-MM-DD".
+    //    Wil je er toch een naam bij tonen, gebruik dan:
+    //      { d: "JJJJ-MM-DD", label: "Naam instapmoment" }
+    //    Data die al voorbij zijn worden automatisch verborgen; de
+    //    "eerstvolgende instapdatum" wordt automatisch berekend.
+    instapdata: [
+      "2026-08-29",
+      "2026-10-24",
+      "2027-01-09",
+      "2027-02-20"
+    ],
+
+    // Hoeveel volgende data tonen we in de lijst (na de eerstvolgende)?
+    toonAantal:     6,
+
+    // Kleuren (hex) — huisstijl Jong El Fuerte
+    kleurPrimair:   "#1CA9E0",  // sky-blauw: knoppen / koppen / accenten
+    kleurAccent:    "#C8D400",  // limoen: accentbalk / details
+    kleurDonker:    "#232B33",  // bodytekst / datum
+    kleurLicht:     "#EBF7FD"   // lichtblauwe achtergrond hero
+  };
+  /* ==========================================================
+     EINDE INSTELLINGEN
+     ========================================================== */
+
+  var MAANDEN = ["januari","februari","maart","april","mei","juni",
+    "juli","augustus","september","oktober","november","december"];
+  var DAGEN = ["zondag","maandag","dinsdag","woensdag",
+    "donderdag","vrijdag","zaterdag"];
+
+  // Elke regel wordt genormaliseerd naar { date, label }
+  function normaliseer(entry) {
+    var s = (typeof entry === "string") ? entry : entry.d;
+    var lbl = (typeof entry === "string") ? "" : (entry.label || "");
+    var d = s.split("-");
+    return { date: new Date(+d[0], +d[1] - 1, +d[2]), label: lbl };
+  }
+
+  function formatLang(date) {
+    return DAGEN[date.getDay()] + " " + date.getDate() + " " +
+      MAANDEN[date.getMonth()] + " " + date.getFullYear();
+  }
+
+  function formatKort(date) {
+    return date.getDate() + " " + MAANDEN[date.getMonth()] + " " + date.getFullYear();
+  }
+
+  function mailtoLink(item) {
+    var datum = item.date;
+    var mod = item.label ? " (" + item.label + ")" : "";
+    var onderwerp = "Inschrijving " + CONFIG.opleiding + " — instap " + formatKort(datum) + mod;
+    var body =
+      "Hallo,\n\n" +
+      "Ik wil me graag inschrijven voor " + CONFIG.opleiding + " van Jong El Fuerte.\n" +
+      "Gekozen instapmoment: " + formatLang(datum) + (item.label ? " — " + item.label : "") + "\n\n" +
+      "Mijn gegevens:\n" +
+      "- Naam:\n" +
+      "- Leeftijd:\n" +
+      "- Telefoon:\n" +
+      "- Eventuele opmerking:\n\n" +
+      "Alvast bedankt!";
+    return "mailto:" + encodeURIComponent(CONFIG.email) +
+      "?subject=" + encodeURIComponent(onderwerp) +
+      "&body=" + encodeURIComponent(body);
+  }
+
+  // Bepaal eerstvolgende + komende instapmomenten (vanaf vandaag)
+  var vandaag = new Date();
+  vandaag.setHours(0, 0, 0, 0);
+
+  var komende = CONFIG.instapdata
+    .map(normaliseer)
+    .filter(function (it) { return it.date >= vandaag; })
+    .sort(function (a, b) { return a.date - b.date; });
+
+  var eerstvolgende = komende.length ? komende[0] : null;
+  var rest = komende.slice(1, 1 + CONFIG.toonAantal);
+
+  // ---- Stijl (huisstijl Jong El Fuerte) ----
+  var css =
+    ".dja-wrap{--dja-p:" + CONFIG.kleurPrimair + ";--dja-a:" + CONFIG.kleurAccent +
+      ";--dja-d:" + CONFIG.kleurDonker + ";--dja-l:" + CONFIG.kleurLicht + ";" +
+      "font-family:'Poppins','Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;" +
+      "max-width:640px;margin:0 auto;color:var(--dja-d);line-height:1.5;box-sizing:border-box;}" +
+    ".dja-wrap *{box-sizing:border-box;}" +
+    ".dja-titel{font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;" +
+      "color:var(--dja-p);margin:0 0 .6rem;}" +
+    ".dja-slogan{display:inline-flex;align-items:center;gap:.5rem;background:var(--dja-a);" +
+      "color:#2c3400;font-weight:800;font-size:.95rem;line-height:1.3;padding:.6rem 1rem;" +
+      "border-radius:12px;margin:0 0 1.1rem;}" +
+    ".dja-slogan .vink{flex:0 0 auto;width:1.15rem;height:1.15rem;border-radius:50%;" +
+      "background:#2c3400;color:var(--dja-a);display:inline-flex;align-items:center;" +
+      "justify-content:center;font-size:.75rem;}" +
+    ".dja-hero{position:relative;background:var(--dja-l);border-radius:14px;overflow:hidden;" +
+      "padding:2rem 1.5rem 1.9rem;text-align:center;box-shadow:0 6px 24px rgba(28,169,224,.10);}" +
+    ".dja-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:7px;" +
+      "background:linear-gradient(90deg,var(--dja-p) 0%,var(--dja-p) 50%,var(--dja-a) 50%,var(--dja-a) 100%);}" +
+    ".dja-hero .lbl{font-size:.82rem;text-transform:uppercase;letter-spacing:.16em;color:var(--dja-p);" +
+      "font-weight:800;margin:.4rem 0 .5rem;}" +
+    ".dja-hero .datum{font-size:2rem;font-weight:800;margin:0 0 .5rem;color:var(--dja-d);" +
+      "line-height:1.15;text-transform:capitalize;}" +
+    ".dja-chip{display:inline-block;background:var(--dja-a);color:#2c3400;font-weight:800;" +
+      "font-size:.75rem;letter-spacing:.03em;text-transform:uppercase;padding:.28rem .7rem;" +
+      "border-radius:999px;margin:0 0 1.1rem;}" +
+    ".dja-btn{display:inline-block;background:var(--dja-p);color:#fff;text-decoration:none;" +
+      "font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.9rem 1.9rem;" +
+      "border-radius:999px;font-size:1rem;box-shadow:0 4px 14px rgba(28,169,224,.35);" +
+      "transition:transform .08s ease,filter .15s ease,box-shadow .15s ease;}" +
+    ".dja-btn:hover{filter:brightness(1.06);transform:translateY(-2px);color:#fff;" +
+      "box-shadow:0 7px 20px rgba(28,169,224,.45);}" +
+    ".dja-lijst{margin:1.75rem 0 0;padding:0;list-style:none;}" +
+    ".dja-lijst h3{font-size:.82rem;text-transform:uppercase;letter-spacing:.14em;color:var(--dja-p);" +
+      "margin:0 0 .5rem;font-weight:800;}" +
+    ".dja-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;" +
+      "padding:.8rem .35rem;border-bottom:1px solid rgba(28,169,224,.16);}" +
+    ".dja-row:last-child{border-bottom:0;}" +
+    ".dja-row .info{text-align:left;}" +
+    ".dja-row .d{font-weight:600;text-transform:capitalize;display:block;}" +
+    ".dja-row .m{font-size:.75rem;font-weight:700;color:var(--dja-p);text-transform:uppercase;" +
+      "letter-spacing:.04em;}" +
+    ".dja-row a{color:var(--dja-p);font-weight:800;text-decoration:none;white-space:nowrap;" +
+      "text-transform:uppercase;font-size:.82rem;letter-spacing:.04em;}" +
+    ".dja-row a:hover{color:var(--dja-d);}" +
+    ".dja-row a::after{content:'';display:block;height:3px;background:var(--dja-a);" +
+      "border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform .15s ease;}" +
+    ".dja-row a:hover::after{transform:scaleX(1);}" +
+    ".dja-leeg{background:var(--dja-l);border-radius:14px;padding:1.75rem;text-align:center;}" +
+    ".dja-leeg a{color:var(--dja-p);font-weight:800;}" +
+    "@media(max-width:420px){.dja-hero .datum{font-size:1.55rem;}}";
+
+  var html = "<div class='dja-wrap'>";
+  html += "<p class='dja-titel'>" + CONFIG.academy + "</p>";
+  if (CONFIG.slogan) {
+    html += "<p class='dja-slogan'><span class='vink'>&#10003;</span>" +
+      "<span>" + CONFIG.slogan + "</span></p>";
+  }
+
+  if (eerstvolgende) {
+    html += "<div class='dja-hero'>";
+    html += "<p class='lbl'>Eerstvolgende instapmoment</p>";
+    html += "<p class='datum'>" + formatLang(eerstvolgende.date) + "</p>";
+    if (eerstvolgende.label) html += "<span class='dja-chip'>" + eerstvolgende.label + "</span><br>";
+    html += "<a class='dja-btn' href='" + mailtoLink(eerstvolgende) + "'>Inschrijven &rarr;</a>";
+    html += "</div>";
+
+    if (rest.length) {
+      html += "<ul class='dja-lijst'><h3>Volgende instapmomenten</h3>";
+      rest.forEach(function (it) {
+        html += "<li class='dja-row'><span class='info'>" +
+          "<span class='d'>" + formatLang(it.date) + "</span>" +
+          (it.label ? "<span class='m'>" + it.label + "</span>" : "") +
+          "</span>" +
+          "<a href='" + mailtoLink(it) + "'>Inschrijven</a></li>";
+      });
+      html += "</ul>";
+    }
+  } else {
+    html += "<div class='dja-leeg'><p><strong>Momenteel zijn er geen instapmomenten gepland.</strong></p>" +
+      "<p>Contacteer ons gerust via <a href='mailto:" + CONFIG.email + "'>" + CONFIG.email + "</a>.</p></div>";
+  }
+
+  html += "</div>";
+
+  var root = document.getElementById("dja-kalender");
+  var style = document.createElement("style");
+  style.textContent = css;
+  root.appendChild(style);
+  root.insertAdjacentHTML("beforeend", html);
+})();
+</script>
