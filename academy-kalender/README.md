@@ -1,9 +1,12 @@
-# De Jeftjes Academy — Instapkalender
+# Jong El Fuerte — Academy Instapkalender
 
 Een zelfstandige kalender-widget voor de website (WordPress). Toont
 automatisch de **eerstvolgende instapdatum**, een lijst van de volgende
 instapmomenten, en een **Inschrijven**-knop die een vooringevulde e-mail
 opent naar de academy.
+
+Kleuren en stijl zijn afgestemd op de huisstijl van de-jeftjes.be
+(sky-blauw + limoen, vette uppercase koppen).
 
 - 📄 Eén bestand: [`kalender-embed.html`](./kalender-embed.html)
 - 🔌 Geen plugin nodig — werkt in een gewoon "Custom HTML"-blok
@@ -18,8 +21,8 @@ Open `kalender-embed.html` en pas enkel het `CONFIG`-blok bovenaan aan:
 
 ```js
 var CONFIG = {
-  academy:   "De Jeftjes Academy",
-  opleiding: "Onze opleiding",
+  academy:   "Jong El Fuerte — Academy",
+  opleiding: "de Academy",
   email:     "info@de-jeftjes.be",   // waar inschrijvingen naartoe gaan
 
   instapdata: [                       // vaste lijst, formaat JJJJ-MM-DD
@@ -29,9 +32,10 @@ var CONFIG = {
   ],
 
   toonAantal:   6,                    // hoeveel volgende data tonen
-  kleurPrimair: "#e8531f",            // knoppen / accenten
-  kleurDonker:  "#1f2a44",            // titels
-  kleurLicht:   "#fff7f3"             // achtergrond
+  kleurPrimair: "#1CA9E0",            // sky-blauw: knoppen / koppen / accenten
+  kleurAccent:  "#C8D400",            // limoen: accentbalk / details
+  kleurDonker:  "#232B33",            // bodytekst / datum
+  kleurLicht:   "#EBF7FD"             // lichtblauwe achtergrond
 };
 ```
 
