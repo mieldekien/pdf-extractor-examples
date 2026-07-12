@@ -25,10 +25,11 @@ var CONFIG = {
   opleiding: "de Academy",
   email:     "info@de-jeftjes.be",   // waar inschrijvingen naartoe gaan
 
-  instapdata: [                       // vaste lijst, formaat JJJJ-MM-DD
-    "2026-09-01",
-    "2026-10-06",
-    "2026-11-03"
+  instapdata: [                       // start van elke module
+    { d: "2026-08-29", label: "Module 1 (MU1)" },
+    { d: "2026-10-24", label: "Module 2 (MU2)" },
+    { d: "2027-01-09", label: "Module 3 (MU3)" },
+    { d: "2027-02-20", label: "Module 4 (MU4)" }
   ],
 
   toonAantal:   6,                    // hoeveel volgende data tonen

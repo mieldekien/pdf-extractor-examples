@@ -28,17 +28,16 @@
     // E-mailadres waar inschrijvingen naartoe gaan
     email:          "info@de-jeftjes.be",
 
-    // 👉 Vaste lijst met instapdata (formaat: "JJJJ-MM-DD").
-    //    Data die al voorbij zijn worden automatisch verborgen.
-    //    Voeg gerust nieuwe data toe of verwijder oude — de
+    // 👉 Instapmomenten (start van elke module) uit de planning.
+    //    Formaat per regel:  { d: "JJJJ-MM-DD", label: "..." }
+    //    of gewoon een datum-string "JJJJ-MM-DD" zonder label.
+    //    Data die al voorbij zijn worden automatisch verborgen; de
     //    "eerstvolgende instapdatum" wordt automatisch berekend.
     instapdata: [
-      "2026-09-01",
-      "2026-10-06",
-      "2026-11-03",
-      "2026-12-01",
-      "2027-01-12",
-      "2027-02-02"
+      { d: "2026-08-29", label: "Module 1 (MU1)" },
+      { d: "2026-10-24", label: "Module 2 (MU2)" },
+      { d: "2027-01-09", label: "Module 3 (MU3)" },
+      { d: "2027-02-20", label: "Module 4 (MU4)" }
     ],
 
     // Hoeveel volgende data tonen we in de lijst (na de eerstvolgende)?
@@ -59,9 +58,12 @@
   var DAGEN = ["zondag","maandag","dinsdag","woensdag",
     "donderdag","vrijdag","zaterdag"];
 
-  function parseDatum(s) {
+  // Elke regel wordt genormaliseerd naar { date, label }
+  function normaliseer(entry) {
+    var s = (typeof entry === "string") ? entry : entry.d;
+    var lbl = (typeof entry === "string") ? "" : (entry.label || "");
     var d = s.split("-");
-    return new Date(+d[0], +d[1] - 1, +d[2]);
+    return { date: new Date(+d[0], +d[1] - 1, +d[2]), label: lbl };
   }
 
   function formatLang(date) {
@@ -73,12 +75,14 @@
     return date.getDate() + " " + MAANDEN[date.getMonth()] + " " + date.getFullYear();
   }
 
-  function mailtoLink(date) {
-    var onderwerp = "Inschrijving " + CONFIG.opleiding + " — instap " + formatKort(date);
+  function mailtoLink(item) {
+    var datum = item.date;
+    var mod = item.label ? " (" + item.label + ")" : "";
+    var onderwerp = "Inschrijving " + CONFIG.opleiding + " — instap " + formatKort(datum) + mod;
     var body =
       "Hallo,\n\n" +
       "Ik wil me graag inschrijven voor " + CONFIG.opleiding + " van Jong El Fuerte.\n" +
-      "Gekozen instapdatum: " + formatLang(date) + "\n\n" +
+      "Gekozen instapmoment: " + formatLang(datum) + (item.label ? " — " + item.label : "") + "\n\n" +
       "Mijn gegevens:\n" +
       "- Naam:\n" +
       "- Leeftijd:\n" +
@@ -90,14 +94,14 @@
       "&body=" + encodeURIComponent(body);
   }
 
-  // Bepaal eerstvolgende + komende data (vanaf vandaag, incl. vandaag)
+  // Bepaal eerstvolgende + komende instapmomenten (vanaf vandaag)
   var vandaag = new Date();
   vandaag.setHours(0, 0, 0, 0);
 
   var komende = CONFIG.instapdata
-    .map(parseDatum)
-    .filter(function (d) { return d >= vandaag; })
-    .sort(function (a, b) { return a - b; });
+    .map(normaliseer)
+    .filter(function (it) { return it.date >= vandaag; })
+    .sort(function (a, b) { return a.date - b.date; });
 
   var eerstvolgende = komende.length ? komende[0] : null;
   var rest = komende.slice(1, 1 + CONFIG.toonAantal);
@@ -117,8 +121,11 @@
       "background:linear-gradient(90deg,var(--dja-p) 0%,var(--dja-p) 55%,var(--dja-a) 55%,var(--dja-a) 100%);}" +
     ".dja-hero .lbl{font-size:.82rem;text-transform:uppercase;letter-spacing:.16em;color:var(--dja-p);" +
       "font-weight:800;margin:.4rem 0 .5rem;}" +
-    ".dja-hero .datum{font-size:2rem;font-weight:800;margin:0 0 1.25rem;color:var(--dja-d);" +
+    ".dja-hero .datum{font-size:2rem;font-weight:800;margin:0 0 .5rem;color:var(--dja-d);" +
       "line-height:1.15;text-transform:capitalize;}" +
+    ".dja-chip{display:inline-block;background:var(--dja-a);color:#2c3400;font-weight:800;" +
+      "font-size:.75rem;letter-spacing:.03em;text-transform:uppercase;padding:.28rem .7rem;" +
+      "border-radius:999px;margin:0 0 1.1rem;}" +
     ".dja-btn{display:inline-block;background:var(--dja-p);color:#fff;text-decoration:none;" +
       "font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.9rem 1.9rem;" +
       "border-radius:999px;font-size:1rem;box-shadow:0 4px 14px rgba(28,169,224,.35);" +
@@ -131,7 +138,10 @@
     ".dja-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;" +
       "padding:.8rem .35rem;border-bottom:1px solid rgba(28,169,224,.16);}" +
     ".dja-row:last-child{border-bottom:0;}" +
-    ".dja-row .d{font-weight:600;text-transform:capitalize;}" +
+    ".dja-row .info{text-align:left;}" +
+    ".dja-row .d{font-weight:600;text-transform:capitalize;display:block;}" +
+    ".dja-row .m{font-size:.75rem;font-weight:700;color:var(--dja-p);text-transform:uppercase;" +
+      "letter-spacing:.04em;}" +
     ".dja-row a{color:var(--dja-p);font-weight:800;text-decoration:none;white-space:nowrap;" +
       "text-transform:uppercase;font-size:.82rem;letter-spacing:.04em;}" +
     ".dja-row a:hover{color:var(--dja-d);}" +
@@ -147,21 +157,25 @@
 
   if (eerstvolgende) {
     html += "<div class='dja-hero'>";
-    html += "<p class='lbl'>Eerstvolgende instapdatum</p>";
-    html += "<p class='datum'>" + formatLang(eerstvolgende) + "</p>";
+    html += "<p class='lbl'>Eerstvolgende instapmoment</p>";
+    html += "<p class='datum'>" + formatLang(eerstvolgende.date) + "</p>";
+    if (eerstvolgende.label) html += "<span class='dja-chip'>" + eerstvolgende.label + "</span><br>";
     html += "<a class='dja-btn' href='" + mailtoLink(eerstvolgende) + "'>Inschrijven &rarr;</a>";
     html += "</div>";
 
     if (rest.length) {
       html += "<ul class='dja-lijst'><h3>Volgende instapmomenten</h3>";
-      rest.forEach(function (d) {
-        html += "<li class='dja-row'><span class='d'>" + formatLang(d) + "</span>" +
-          "<a href='" + mailtoLink(d) + "'>Inschrijven</a></li>";
+      rest.forEach(function (it) {
+        html += "<li class='dja-row'><span class='info'>" +
+          "<span class='d'>" + formatLang(it.date) + "</span>" +
+          (it.label ? "<span class='m'>" + it.label + "</span>" : "") +
+          "</span>" +
+          "<a href='" + mailtoLink(it) + "'>Inschrijven</a></li>";
       });
       html += "</ul>";
     }
   } else {
-    html += "<div class='dja-leeg'><p><strong>Momenteel zijn er nog geen instapdata gepland.</strong></p>" +
+    html += "<div class='dja-leeg'><p><strong>Momenteel zijn er geen instapmomenten gepland.</strong></p>" +
       "<p>Contacteer ons gerust via <a href='mailto:" + CONFIG.email + "'>" + CONFIG.email + "</a>.</p></div>";
   }
 
