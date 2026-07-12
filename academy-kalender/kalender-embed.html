@@ -26,6 +26,9 @@
     // Naam zoals die in de inschrijf-mail wordt gebruikt
     opleiding:      "de muziekschool",
 
+    // Opvallende boodschap onder de titel (leeg laten = niet tonen)
+    slogan:         "Geen muzikale voorkennis nodig — iedereen kan starten!",
+
     // E-mailadres waar inschrijvingen naartoe gaan
     email:          "info@de-jeftjes.be",
 
@@ -116,7 +119,13 @@
       "max-width:640px;margin:0 auto;color:var(--dja-d);line-height:1.5;box-sizing:border-box;}" +
     ".dja-wrap *{box-sizing:border-box;}" +
     ".dja-titel{font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;font-weight:800;" +
-      "color:var(--dja-p);margin:0 0 .9rem;}" +
+      "color:var(--dja-p);margin:0 0 .6rem;}" +
+    ".dja-slogan{display:inline-flex;align-items:center;gap:.5rem;background:var(--dja-a);" +
+      "color:#2c3400;font-weight:800;font-size:.95rem;line-height:1.3;padding:.6rem 1rem;" +
+      "border-radius:12px;margin:0 0 1.1rem;}" +
+    ".dja-slogan .vink{flex:0 0 auto;width:1.15rem;height:1.15rem;border-radius:50%;" +
+      "background:#2c3400;color:var(--dja-a);display:inline-flex;align-items:center;" +
+      "justify-content:center;font-size:.75rem;}" +
     ".dja-hero{position:relative;background:var(--dja-l);border-radius:14px;overflow:hidden;" +
       "padding:2rem 1.5rem 1.9rem;text-align:center;box-shadow:0 6px 24px rgba(28,169,224,.10);}" +
     ".dja-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:7px;" +
@@ -156,6 +165,10 @@
 
   var html = "<div class='dja-wrap'>";
   html += "<p class='dja-titel'>" + CONFIG.academy + "</p>";
+  if (CONFIG.slogan) {
+    html += "<p class='dja-slogan'><span class='vink'>&#10003;</span>" +
+      "<span>" + CONFIG.slogan + "</span></p>";
+  }
 
   if (eerstvolgende) {
     html += "<div class='dja-hero'>";

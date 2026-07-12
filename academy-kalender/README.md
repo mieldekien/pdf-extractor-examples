@@ -24,6 +24,8 @@ var CONFIG = {
   academy:   "Jong El Fuerte Muziekschool",
   opleiding: "de muziekschool",
   email:     "info@de-jeftjes.be",   // waar inschrijvingen naartoe gaan
+  slogan:    "Geen muzikale voorkennis nodig — iedereen kan starten!",
+                                      // opvallende badge; leeg laten = niet tonen
 
   instapdata: [                       // instapmomenten (start lessenreeksen)
     "2026-08-29",
