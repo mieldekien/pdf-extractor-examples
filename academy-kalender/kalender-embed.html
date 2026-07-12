@@ -21,23 +21,25 @@
      INSTELLINGEN  —  pas hier alles aan
      ========================================================== */
   var CONFIG = {
-    // Naam van de academy / opleiding (verschijnt bovenaan)
-    academy:        "Jong El Fuerte — Academy",
-    opleiding:      "de Academy",
+    // Publieke naam (verschijnt bovenaan de kalender)
+    academy:        "Jong El Fuerte Muziekschool",
+    // Naam zoals die in de inschrijf-mail wordt gebruikt
+    opleiding:      "de muziekschool",
 
     // E-mailadres waar inschrijvingen naartoe gaan
     email:          "info@de-jeftjes.be",
 
-    // 👉 Instapmomenten (start van elke module) uit de planning.
-    //    Formaat per regel:  { d: "JJJJ-MM-DD", label: "..." }
-    //    of gewoon een datum-string "JJJJ-MM-DD" zonder label.
+    // 👉 Instapmomenten uit de planning (start van elke lessenreeks).
+    //    Formaat per regel: gewoon een datum-string "JJJJ-MM-DD".
+    //    Wil je er toch een naam bij tonen, gebruik dan:
+    //      { d: "JJJJ-MM-DD", label: "Naam instapmoment" }
     //    Data die al voorbij zijn worden automatisch verborgen; de
     //    "eerstvolgende instapdatum" wordt automatisch berekend.
     instapdata: [
-      { d: "2026-08-29", label: "Module 1 (MU1)" },
-      { d: "2026-10-24", label: "Module 2 (MU2)" },
-      { d: "2027-01-09", label: "Module 3 (MU3)" },
-      { d: "2027-02-20", label: "Module 4 (MU4)" }
+      "2026-08-29",
+      "2026-10-24",
+      "2027-01-09",
+      "2027-02-20"
     ],
 
     // Hoeveel volgende data tonen we in de lijst (na de eerstvolgende)?
