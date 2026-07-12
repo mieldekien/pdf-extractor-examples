@@ -1,9 +1,9 @@
-# Jong El Fuerte Muziekschool — Instapkalender
+# Jong El Fuerte Academy — Instapkalender
 
 Een zelfstandige kalender-widget voor de website (WordPress). Toont
 automatisch de **eerstvolgende instapdatum**, een lijst van de volgende
 instapmomenten, en een **Inschrijven**-knop die een vooringevulde e-mail
-opent naar de muziekschool.
+opent naar de Academy.
 
 Kleuren en stijl zijn afgestemd op de huisstijl van de-jeftjes.be
 (sky-blauw + limoen, vette uppercase koppen).
@@ -21,8 +21,8 @@ Open `kalender-embed.html` en pas enkel het `CONFIG`-blok bovenaan aan:
 
 ```js
 var CONFIG = {
-  academy:   "Jong El Fuerte Muziekschool",
-  opleiding: "de muziekschool",
+  academy:   "Jong El Fuerte Academy",
+  opleiding: "de Academy",
   email:     "info@de-jeftjes.be",   // waar inschrijvingen naartoe gaan
   slogan:    "Geen muzikale voorkennis nodig — iedereen kan starten!",
                                       // opvallende badge; leeg laten = niet tonen
