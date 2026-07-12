@@ -1,0 +1,160 @@
+<!--
+  ============================================================
+  DE JEFTJES ACADEMY — INSTAPKALENDER (insluitbare widget)
+  ============================================================
+  Plak deze volledige code in een "Custom HTML"-blok op een
+  WordPress-pagina (of gebruik het als losse pagina).
+
+  ⚙️  AANPASSEN? Enkel het blokje hieronder tussen
+      "INSTELLINGEN" wijzigen. De rest hoef je niet aan te raken.
+  ============================================================
+-->
+
+<div id="dja-kalender"></div>
+
+<script>
+(function () {
+  /* ==========================================================
+     INSTELLINGEN  —  pas hier alles aan
+     ========================================================== */
+  var CONFIG = {
+    // Naam van de academy / opleiding (verschijnt bovenaan)
+    academy:        "De Jeftjes Academy",
+    opleiding:      "Onze opleiding",
+
+    // E-mailadres waar inschrijvingen naartoe gaan
+    email:          "info@de-jeftjes.be",
+
+    // 👉 Vaste lijst met instapdata (formaat: "JJJJ-MM-DD").
+    //    Data die al voorbij zijn worden automatisch verborgen.
+    //    Voeg gerust nieuwe data toe of verwijder oude — de
+    //    "eerstvolgende instapdatum" wordt automatisch berekend.
+    instapdata: [
+      "2026-09-01",
+      "2026-10-06",
+      "2026-11-03",
+      "2026-12-01",
+      "2027-01-12",
+      "2027-02-02"
+    ],
+
+    // Hoeveel volgende data tonen we in de lijst (na de eerstvolgende)?
+    toonAantal:     6,
+
+    // Kleuren (hex). Pas aan naar jullie huisstijl.
+    kleurPrimair:   "#e8531f",  // knoppen / accenten
+    kleurDonker:    "#1f2a44",  // titels / tekst
+    kleurLicht:     "#fff7f3"   // achtergrond hero
+  };
+  /* ==========================================================
+     EINDE INSTELLINGEN
+     ========================================================== */
+
+  var MAANDEN = ["januari","februari","maart","april","mei","juni",
+    "juli","augustus","september","oktober","november","december"];
+  var DAGEN = ["zondag","maandag","dinsdag","woensdag",
+    "donderdag","vrijdag","zaterdag"];
+
+  function parseDatum(s) {
+    var d = s.split("-");
+    return new Date(+d[0], +d[1] - 1, +d[2]);
+  }
+
+  function formatLang(date) {
+    return DAGEN[date.getDay()] + " " + date.getDate() + " " +
+      MAANDEN[date.getMonth()] + " " + date.getFullYear();
+  }
+
+  function formatKort(date) {
+    return date.getDate() + " " + MAANDEN[date.getMonth()] + " " + date.getFullYear();
+  }
+
+  function mailtoLink(date) {
+    var onderwerp = "Inschrijving " + CONFIG.opleiding + " — instap " + formatKort(date);
+    var body =
+      "Hallo,\n\n" +
+      "Ik wil me graag inschrijven voor " + CONFIG.opleiding + ".\n" +
+      "Gekozen instapdatum: " + formatLang(date) + "\n\n" +
+      "Mijn gegevens:\n" +
+      "- Naam:\n" +
+      "- Telefoon:\n" +
+      "- Eventuele opmerking:\n\n" +
+      "Alvast bedankt!";
+    return "mailto:" + encodeURIComponent(CONFIG.email) +
+      "?subject=" + encodeURIComponent(onderwerp) +
+      "&body=" + encodeURIComponent(body);
+  }
+
+  // Bepaal eerstvolgende + komende data (vanaf vandaag, incl. vandaag)
+  var vandaag = new Date();
+  vandaag.setHours(0, 0, 0, 0);
+
+  var komende = CONFIG.instapdata
+    .map(parseDatum)
+    .filter(function (d) { return d >= vandaag; })
+    .sort(function (a, b) { return a - b; });
+
+  var eerstvolgende = komende.length ? komende[0] : null;
+  var rest = komende.slice(1, 1 + CONFIG.toonAantal);
+
+  // ---- Opbouw HTML ----
+  var css =
+    ".dja-wrap{--dja-p:" + CONFIG.kleurPrimair + ";--dja-d:" + CONFIG.kleurDonker +
+      ";--dja-l:" + CONFIG.kleurLicht + ";" +
+      "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;" +
+      "max-width:640px;margin:0 auto;color:var(--dja-d);line-height:1.5;box-sizing:border-box;}" +
+    ".dja-wrap *{box-sizing:border-box;}" +
+    ".dja-titel{font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;opacity:.7;margin:0 0 .25rem;}" +
+    ".dja-hero{background:var(--dja-l);border:1px solid rgba(0,0,0,.06);border-radius:16px;" +
+      "padding:1.5rem 1.5rem 1.75rem;text-align:center;}" +
+    ".dja-hero .lbl{font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dja-p);" +
+      "font-weight:700;margin:0 0 .35rem;}" +
+    ".dja-hero .datum{font-size:1.9rem;font-weight:800;margin:0 0 1.1rem;color:var(--dja-d);}" +
+    ".dja-btn{display:inline-block;background:var(--dja-p);color:#fff;text-decoration:none;" +
+      "font-weight:700;padding:.85rem 1.6rem;border-radius:999px;font-size:1.05rem;" +
+      "transition:transform .08s ease,filter .15s ease;}" +
+    ".dja-btn:hover{filter:brightness(1.07);transform:translateY(-1px);color:#fff;}" +
+    ".dja-lijst{margin:1.5rem 0 0;padding:0;list-style:none;}" +
+    ".dja-lijst h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;opacity:.6;" +
+      "margin:0 0 .6rem;font-weight:700;}" +
+    ".dja-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;" +
+      "padding:.7rem .25rem;border-bottom:1px solid rgba(0,0,0,.07);}" +
+    ".dja-row:last-child{border-bottom:0;}" +
+    ".dja-row .d{font-weight:600;}" +
+    ".dja-row a{color:var(--dja-p);font-weight:700;text-decoration:none;white-space:nowrap;}" +
+    ".dja-row a:hover{text-decoration:underline;}" +
+    ".dja-leeg{background:var(--dja-l);border-radius:16px;padding:1.5rem;text-align:center;}" +
+    ".dja-leeg a{color:var(--dja-p);font-weight:700;}";
+
+  var html = "<div class='dja-wrap'>";
+  html += "<p class='dja-titel'>" + CONFIG.academy + "</p>";
+
+  if (eerstvolgende) {
+    html += "<div class='dja-hero'>";
+    html += "<p class='lbl'>Eerstvolgende instapdatum</p>";
+    html += "<p class='datum'>" + formatLang(eerstvolgende) + "</p>";
+    html += "<a class='dja-btn' href='" + mailtoLink(eerstvolgende) + "'>Inschrijven &rarr;</a>";
+    html += "</div>";
+
+    if (rest.length) {
+      html += "<ul class='dja-lijst'><h3>Volgende instapmomenten</h3>";
+      rest.forEach(function (d) {
+        html += "<li class='dja-row'><span class='d'>" + formatLang(d) + "</span>" +
+          "<a href='" + mailtoLink(d) + "'>Inschrijven</a></li>";
+      });
+      html += "</ul>";
+    }
+  } else {
+    html += "<div class='dja-leeg'><p><strong>Momenteel zijn er nog geen instapdata gepland.</strong></p>" +
+      "<p>Contacteer ons gerust via <a href='mailto:" + CONFIG.email + "'>" + CONFIG.email + "</a>.</p></div>";
+  }
+
+  html += "</div>";
+
+  var root = document.getElementById("dja-kalender");
+  var style = document.createElement("style");
+  style.textContent = css;
+  root.appendChild(style);
+  root.insertAdjacentHTML("beforeend", html);
+})();
+</script>
