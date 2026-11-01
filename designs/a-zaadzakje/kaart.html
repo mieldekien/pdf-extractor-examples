@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../fonts/big-shoulders-display/font.css">
+<link rel="stylesheet" href="../../fonts/space-mono/font.css">
+<style>
+@page{size:210mm 148mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:794px;height:559px;overflow:hidden;background:transparent}
+:root{--ink:#2a2119;--rust:#9a3a1e}
+.half{position:absolute;left:0;width:794px;height:279.5px}
+.back{top:0;transform:rotate(180deg)}
+.front{top:279.5px}
+.mono{font-family:'Space Mono',monospace;color:var(--ink)}
+.side{position:absolute;left:32px;top:32px;width:16px;height:215.5px;writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:"Space Mono",monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);white-space:nowrap;
+  display:flex;justify-content:space-between;line-height:16px}
+.bar{position:absolute;left:62px;top:32px;width:2px;height:215.5px;background:var(--ink)}
+.spec{position:absolute;left:80px;top:32px;font-size:9.5px;line-height:15px;letter-spacing:.04em}
+.spec td{padding:0 14px 0 0;vertical-align:baseline}
+.spec td:first-child{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:8.5px}
+.name{position:absolute;left:76px;bottom:35px;font-family:'Big Shoulders Display',sans-serif;font-weight:900;
+  font-size:140px;line-height:.74;text-transform:uppercase;color:var(--ink);white-space:nowrap;letter-spacing:.005em}
+.stamp{position:absolute;right:36px;top:34px;width:116px;height:116px;transform:rotate(-9deg)}
+.net{position:absolute;right:32px;bottom:32px;width:122px;font-size:8.5px;line-height:12px;letter-spacing:.03em;border-top:2px solid var(--ink);padding-top:6px}
+.net b{display:inline-block;width:52px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:8px}
+.net span{display:block;margin-top:5px;font-style:normal;color:var(--rust)}
+</style></head><body>
+<div class="half back">
+  <div class="side"><span>Zaden · Semences</span><span>Lot Nº 26</span></div>
+  <div class="bar"></div>
+  <table class="spec mono">
+    <tr><td>Soort</td><td>gast, eenjarig, zeer gezellig</td></tr>
+    <tr><td>Zaaien</td><td>aan tafel, in goed gezelschap</td></tr>
+    <tr><td>Bloei</td><td>de hele avond</td></tr>
+  </table>
+  <svg class="stamp" viewBox="0 0 116 116" aria-hidden="true">
+    <defs><path id="c-back" d="M58,58 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+    <circle cx="58" cy="58" r="56" fill="none" stroke="#9a3a1e" stroke-width="2"/>
+    <circle cx="58" cy="58" r="33" fill="none" stroke="#9a3a1e" stroke-width="1"/>
+    <text font-family="Space Mono" font-size="9.4" font-weight="700" letter-spacing="2.2" fill="#9a3a1e">
+      <textPath href="#c-back">OOGST 2026 · ZADEN VAN DE TAFEL ·</textPath></text>
+    <text x="58" y="56" text-anchor="middle" font-family="Big Shoulders Display" font-weight="900" font-size="26" fill="#9a3a1e">100%</text>
+    <text x="58" y="70" text-anchor="middle" font-family="Space Mono" font-size="7" letter-spacing="1.4" fill="#9a3a1e">KIEMKRACHT</text>
+  </svg>
+  <div class="name">{{naam}}</div>
+  <div class="net mono"><b>Inhoud</b> 1 gast<br><b>Netto</b> ± 1 ziel<br><span>Bewaren op een<br>droge, warme plek.</span></div>
+</div>
+<div class="half front">
+  <div class="side"><span>Zaden · Semences</span><span>Lot Nº 26</span></div>
+  <div class="bar"></div>
+  <table class="spec mono">
+    <tr><td>Soort</td><td>gast, eenjarig, zeer gezellig</td></tr>
+    <tr><td>Zaaien</td><td>aan tafel, in goed gezelschap</td></tr>
+    <tr><td>Bloei</td><td>de hele avond</td></tr>
+  </table>
+  <svg class="stamp" viewBox="0 0 116 116" aria-hidden="true">
+    <defs><path id="c-front" d="M58,58 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+    <circle cx="58" cy="58" r="56" fill="none" stroke="#9a3a1e" stroke-width="2"/>
+    <circle cx="58" cy="58" r="33" fill="none" stroke="#9a3a1e" stroke-width="1"/>
+    <text font-family="Space Mono" font-size="9.4" font-weight="700" letter-spacing="2.2" fill="#9a3a1e">
+      <textPath href="#c-front">OOGST 2026 · ZADEN VAN DE TAFEL ·</textPath></text>
+    <text x="58" y="56" text-anchor="middle" font-family="Big Shoulders Display" font-weight="900" font-size="26" fill="#9a3a1e">100%</text>
+    <text x="58" y="70" text-anchor="middle" font-family="Space Mono" font-size="7" letter-spacing="1.4" fill="#9a3a1e">KIEMKRACHT</text>
+  </svg>
+  <div class="name">{{naam}}</div>
+  <div class="net mono"><b>Inhoud</b> 1 gast<br><b>Netto</b> ± 1 ziel<br><span>Bewaren op een<br>droge, warme plek.</span></div>
+</div>
+
+</body></html>

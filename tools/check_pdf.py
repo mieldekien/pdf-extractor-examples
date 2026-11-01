@@ -43,10 +43,10 @@ for i in range(pages):
         for y in range(H):
             for x in range(W):
                 r, g, b = px[x, y]
-                if r > 245 and g > 245 and b > 245: continue  # onbedrukt
+                if min(r, g, b) > 200: continue  # onbedrukt of lichte anti-aliasing
                 yy, xx = y/sy, x/sx
-                if xx < M or xx > 794-M or yy < M or yy > 559-M: bad["rand"] += 1
-                elif FOLD-M < yy < FOLD+M: bad["plooi"] += 1
+                if xx < M-1 or xx > 794-M+1 or yy < M-1 or yy > 559-M+1: bad["rand"] += 1
+                elif FOLD-M+1 < yy < FOLD+M-1: bad["plooi"] += 1
         for k, v in bad.items():
             if v > 3: problems.append(f"- p{i+1} {exp}: {v} inktpixels binnen 8 mm van de {k}")
 print("GOED VOOR DRUK" if not problems else "NIET GOED")

@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Big Shoulders Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url(big-shoulders-display-normal-500.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Big Shoulders Display';
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+  src: url(big-shoulders-display-normal-800.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Big Shoulders Display';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url(big-shoulders-display-normal-900.ttf) format('truetype');
+}
